@@ -155,7 +155,7 @@
 <div class="login-container">
     <div class="title">Las Huequitas</div>
     <h2>Iniciar Sesión</h2>
-    <form action="../login?ruta=login" method="POST" autocomplete="off">
+    <form action="${pageContext.request.contextPath}/login?ruta=login" method="POST" autocomplete="off">
         <label for="txtEmail">Correo electrónico:</label>
         <input type="email" id="txtEmail" name="txtEmail" required>
 
@@ -167,12 +167,11 @@
     <c:if test="${not empty errorMessage}">
         <p style="color: red;">${errorMessage}</p>
     </c:if>
-    <p class="register-link">¿No tienes una cuenta? <a href="../RegistroController?ruta=registrar">Registrarse</a></p>
+    <p class="register-link">¿No tienes una cuenta? <a href="${pageContext.request.contextPath}/RegistroController?ruta=registrar">Registrarse</a></p>
 </div
         <!-- Modal -->
 <div id="messageModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">Mensaje</div>
         <div class="modal-body">${messageReg}</div>
     </div>
 </div>

@@ -113,7 +113,7 @@
 <body>
 <div class="container">
     <h2>Registro de Usuario</h2>
-    <form action="../RegistroController?ruta=guardar" method="POST" autocomplete="off">
+    <form action="${pageContext.request.contextPath}/RegistroController?ruta=guardar" method="POST" autocomplete="off">
         <!--<label for="txtId">id</label> -->
         <input type="hidden" id="txtId" name="txtId" required>
 
@@ -128,7 +128,7 @@
 
         <button type="submit" class="button">Registrarse</button>
     </form>
-    <p class="login-link">¿Ya tienes una cuenta? <a href="../login?ruta=ingresar">Iniciar sesión</a></p>
+    <p class="login-link">¿Ya tienes una cuenta? <a href="${pageContext.request.contextPath}/login?ruta=ingresar">Iniciar sesión</a></p>
 </div>
 </body>
 </html>

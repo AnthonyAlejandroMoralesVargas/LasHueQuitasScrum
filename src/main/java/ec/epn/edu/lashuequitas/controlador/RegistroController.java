@@ -63,10 +63,10 @@ public class RegistroController extends HttpServlet {
         boolean registrado = usuarioService.crear(usuario);
         System.out.println("registrado: " + registrado);
         if (registrado) {
-            request.setAttribute("messageReg", "Usuario registrado con éxito.");
             //3. Redirigir a la vista Login
-            //request.getRequestDispatcher("vista/Login.jsp").forward(request, response);
+            request.setAttribute("messageReg", "Usuario registrado con éxito.");
             request.getRequestDispatcher("vista/Login.jsp").forward(request, response);
+            //response.sendRedirect("vista/Login.jsp");
         } else {
             request.setAttribute("messageReg", "Error al registrar el usuario.");
             //3. Redirigir a la vista Registro

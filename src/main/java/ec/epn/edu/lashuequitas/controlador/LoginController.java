@@ -42,6 +42,9 @@ public class LoginController extends HttpServlet {
                 case "ingresar":
                     this.ingresar(request, response);
                     break;
+                case "accederHome":
+                    this.accederHome(request, response);
+                    break;
             }
 
     }
@@ -54,12 +57,14 @@ public class LoginController extends HttpServlet {
         Usuario resultado = UsuarioService.autenticar(email, password);
         //3. Redirigir a la vista
         if (resultado == null){
-            response.sendRedirect("vista/Login.jsp");
+            request.setAttribute("messageReg", "Usuario o contraseña incorrectos");
+            request.getRequestDispatcher("vista/Login.jsp").forward(request, response);
         }else {
             HttpSession session = request.getSession();
             session.setAttribute("user", resultado);
             request.setAttribute("messageLogin", "Bienvenido " + resultado.getUsername());
             request.getRequestDispatcher("vista/Home.jsp").forward(request, response);
+            //response.sendRedirect("vista/Home.jsp");
         }
     }
 
@@ -67,11 +72,17 @@ public class LoginController extends HttpServlet {
         //1. Obtener parámetros
         //2. Hablar con el modelo
         //3. Redirigir a la vista
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        request.setAttribute("messageReg", "Sesión cerrada con éxito");
+        request.getRequestDispatcher("vista/Login.jsp").forward(request, response);
     }
 
     private void ingresar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //1. Obtener parámetros
-        String messageRegister = request.getParameter("messageRegSuccess");
+        String messageRegister = request.getParameter("messageReg");
         if (messageRegister != null) {
             request.getRequestDispatcher("vista/Login.jsp").forward(request, response);
         }else {
@@ -80,5 +91,12 @@ public class LoginController extends HttpServlet {
         //2. Hablar con el modelo
         //3. Redirigir a la vista
 
+    }
+
+    private void accederHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //1. Obtener parámetros
+        //2. Hablar con el modelo
+        //3. Redirigir a la vista
+        response.sendRedirect("vista/Home.jsp");
     }
 }

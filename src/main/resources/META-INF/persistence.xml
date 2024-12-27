@@ -7,7 +7,6 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <!-- Clases de las entidades -->
-        <!-- Clases de las entidades -->
         <class>ec.epn.edu.lashuequitas.modelo.entidades.Usuario</class>
 
         <!-- Configuración de la base de datos -->

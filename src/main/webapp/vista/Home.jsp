@@ -110,7 +110,7 @@
     <a href="${pageContext.request.contextPath}/ResenaSv">Ir a Reseñas</a>
     <a href="${pageContext.request.contextPath}/AnuncioSv">Ir a Anuncios</a>
     <a href="${pageContext.request.contextPath}/PromocionSv">Ir a Promociones</a>
-    <a href="${pageContext.request.contextPath}/LogoutSv">Cerrar sesión</a>
+    <a href="${pageContext.request.contextPath}/login?ruta=logout">Cerrar sesión</a>
   </div>
 </div>
 
