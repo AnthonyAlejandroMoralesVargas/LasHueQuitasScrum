@@ -8,6 +8,7 @@
 
         <!-- Clases de las entidades -->
         <class>ec.epn.edu.lashuequitas.modelo.entidades.Usuario</class>
+        <class>ec.epn.edu.lashuequitas.modelo.entidades.Resena</class>
 
         <!-- Configuración de la base de datos -->
         <properties>

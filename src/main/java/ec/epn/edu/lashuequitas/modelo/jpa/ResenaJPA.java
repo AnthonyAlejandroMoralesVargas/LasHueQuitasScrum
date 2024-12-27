@@ -2,31 +2,32 @@
 package ec.epn.edu.lashuequitas.modelo.jpa;
 
 import jakarta.persistence.*;
-import ec.epn.edu.lashuequitas.modelo.entidades.Resenas;
+import ec.epn.edu.lashuequitas.modelo.entidades.Resena;
 import ec.epn.edu.lashuequitas.modelo.entidades.Usuario;
 import java.io.Serializable;
 
-public class ResenasJPA implements Serializable {
+public class ResenaJPA implements Serializable {
 
     private EntityManagerFactory emf = null;
 
     // Constructor con EntityManagerFactory
-    public ResenasJPA(EntityManagerFactory emf) {
+    public ResenaJPA(EntityManagerFactory emf) {
         this.emf = emf;
     }
 
     // Constructor por defecto que crea el EntityManagerFactory
-    public ResenasJPA() {
+    public ResenaJPA() {
         emf = Persistence.createEntityManagerFactory("JavaWebLasHuequitas");
     }
 
     // Obtener el EntityManager
     public EntityManager getEntityManager() {
+
         return emf.createEntityManager();
     }
 
     // Método para crear una nueva reseña
-    public boolean create(Resenas resena) {
+    public boolean create(Resena resena) {
         EntityManager em = null;
         try {
             em = getEntityManager();

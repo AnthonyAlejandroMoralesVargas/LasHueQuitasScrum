@@ -11,7 +11,7 @@ public class UsuarioService {
         return usuarioJPA.create(usuario);
     }
 
-    public static Usuario autenticar(String email, String password) {
+    public Usuario autenticar(String email, String password) {
         UsuarioJPA usuarioJPA = new UsuarioJPA();
         Usuario usuarioEncontrado = usuarioJPA.findByEmail(email);
         if (usuarioEncontrado != null && BCrypt.checkpw(password, usuarioEncontrado.getPasswordHash())) {

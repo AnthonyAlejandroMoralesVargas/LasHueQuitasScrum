@@ -5,7 +5,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "resenas")
-public class Resenas {
+public class Resena {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,14 +29,14 @@ public class Resenas {
     private Usuario usuario;
 
     // Constructores
-    public Resenas() {
+    public Resena() {
     }
 
-    public Resenas(String restaurante, String tipoComida, String descripcion, Date fechaCreacion, Usuario usuario) {
+    public Resena(String restaurante, String tipoComida, String descripcion, Usuario usuario) {
         this.restaurante = restaurante;
         this.tipoComida = tipoComida;
         this.descripcion = descripcion;
-        this.fechaCreacion = fechaCreacion;
+        this.fechaCreacion = new Date();
         this.usuario = usuario;
     }
 

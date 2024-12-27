@@ -148,24 +148,25 @@
 <div class="resena-container">
     <div class="title">Nueva Reseña</div>
     <h2>Crear una Reseña</h2>
-    <form action="${pageContext.request.contextPath}/ResenaSv" method="POST" autocomplete="off">
+    <form action="${pageContext.request.contextPath}/gestionarResena?ruta=publicar" method="POST" autocomplete="off">
         <label for="restaurante">Nombre del restaurante:</label>
-        <input type="text" id="restaurante" name="restaurante" required>
+        <input type="text" id="restaurante" name="txtRestaurante" required>
 
         <label for="tipoComida">Tipo de comida:</label>
-        <select id="tipoComida" name="tipoComida" required>
-            <option value="Extranjera">Extranjera</option>
-            <option value="Snacks">Snacks</option>
-            <option value="Tradicional">Tradicional</option>
+        <select id="tipoComida" name="txtTipoComida" required>
+            <option value="Platos principales">Platos principales</option>
+            <option value="Sopas/Caldos">Sopas/Caldos</option>
+            <option value="Postres">Postres</option>
+            <option value="Bebidas">Bebidas</option>
         </select>
 
         <label for="descripcion">Descripción:</label>
-        <textarea id="descripcion" name="descripcion" required></textarea>
+        <textarea id="descripcion" name="txtDescripcion" required></textarea>
 
         <button type="submit" class="button">Publicar Reseña</button>
     </form>
     <p class="register-link">
-        <a href="${pageContext.request.contextPath}/ResenaSv">Volver a lista de reseñas</a>
+        <a href="${pageContext.request.contextPath}/gestionarResena?ruta=listar">Volver a lista de reseñas</a>
     </p>
 </div>
 <!-- Modal -->

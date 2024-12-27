@@ -107,7 +107,9 @@
   <p>¡Explora, comenta y comparte reseñas gastronómicas!</p>
 
   <div class="nav-links">
-    <a href="${pageContext.request.contextPath}/ResenaSv">Ir a Reseñas</a>
+    <!-- Enlaces de navegación -->
+    <!--  -->
+    <a href="${pageContext.request.contextPath}/gestionarResena?ruta=accederForm">Ir a Reseñas</a> <!-- Redirige directo al formulario para pruebas, se debe cambiar para que redirija al JSP que lista las resenas  -->
     <a href="${pageContext.request.contextPath}/AnuncioSv">Ir a Anuncios</a>
     <a href="${pageContext.request.contextPath}/PromocionSv">Ir a Promociones</a>
     <a href="${pageContext.request.contextPath}/login?ruta=logout">Cerrar sesión</a>

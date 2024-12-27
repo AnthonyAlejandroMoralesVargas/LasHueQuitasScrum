@@ -54,7 +54,8 @@ public class LoginController extends HttpServlet {
         String email = request.getParameter("txtEmail");
         String password = request.getParameter("txtPassword");
         //2. Hablar con el
-        Usuario resultado = UsuarioService.autenticar(email, password);
+        UsuarioService usuarioService = new UsuarioService();
+        Usuario resultado = usuarioService.autenticar(email, password);
         //3. Redirigir a la vista
         if (resultado == null){
             request.setAttribute("messageReg", "Usuario o contraseña incorrectos");
