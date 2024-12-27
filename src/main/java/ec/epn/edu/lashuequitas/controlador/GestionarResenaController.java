@@ -2,6 +2,7 @@ package ec.epn.edu.lashuequitas.controlador;
 
 
 import ec.epn.edu.lashuequitas.modelo.entidades.Resena;
+import ec.epn.edu.lashuequitas.modelo.service.ModeradorService;
 import ec.epn.edu.lashuequitas.modelo.entidades.Usuario;
 import ec.epn.edu.lashuequitas.modelo.service.ResenaService;
 import jakarta.servlet.ServletException;
@@ -63,21 +64,33 @@ public class GestionarResenaController extends HttpServlet {
         String tipoComida = request.getParameter("txtTipoComida");
         String descripcion = request.getParameter("txtDescripcion");
 
+        // 2. Verificar si el título o la descripción contienen palabras ofensivas
+        ModeradorService moderadorService = new ModeradorService();
+
+        if (moderadorService.verificarOfensivo(nombreRestaurante)) {
+            request.setAttribute("messageLogin", "La reseña contiene palabras ofensivas y no se ha publicado.");
+            request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);
+            return;
+        }
+
+        if (moderadorService.verificarOfensivo(descripcion)) {
+            request.setAttribute("messageLogin", "La reseña contiene palabras ofensivas y no se ha publicado.");
+            request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);
+            return;
+        }
 
         Resena resena = new Resena(nombreRestaurante, tipoComida, descripcion, usuario);
-        //2. Hablar con el modelo
+        //3. Hablar con el modelo
         ResenaService resenaService = new ResenaService();
         boolean publicado = resenaService.crear(resena);
-        //3. Redirigir a la vista
+        //4. Redirigir a la vista
         if (publicado) {
             request.setAttribute("messageLogin", "Reseña publicada con éxito.");
             request.getRequestDispatcher("vista/Home.jsp").forward(request, response);
-        }else {
+        } else {
             request.setAttribute("messageLogin", "Error al publicar la reseña");
             request.getRequestDispatcher("vista/Home.jsp").forward(request, response);
-            //response.sendRedirect("vista/Home.jsp");
         }
-
     }
 
     private void listar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

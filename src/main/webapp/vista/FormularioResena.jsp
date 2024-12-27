@@ -148,6 +148,11 @@
 <div class="resena-container">
     <div class="title">Nueva Reseña</div>
     <h2>Crear una Reseña</h2>
+    <c:if test="${not empty messageLogin}">
+        <div class="error-message">
+                ${messageLogin}
+        </div>
+    </c:if>
     <form action="${pageContext.request.contextPath}/gestionarResena?ruta=publicar" method="POST" autocomplete="off">
         <label for="restaurante">Nombre del restaurante:</label>
         <input type="text" id="restaurante" name="txtRestaurante" required>
