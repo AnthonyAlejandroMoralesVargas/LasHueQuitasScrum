@@ -13,7 +13,7 @@
         <!-- Configuración de la base de datos -->
         <properties>
             <!-- URL de la base de datos para Derby -->
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:derby:./database/LasHueQuitasDB;create=true"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:derby:./database/LasHueQuitasAzure;create=true"/>
 
             <!-- Usuario y contraseña de la base de datos -->
             <property name="jakarta.persistence.jdbc.user" value="user"/>
