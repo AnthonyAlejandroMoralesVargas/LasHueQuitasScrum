@@ -79,10 +79,24 @@ public class GestionarResenaController extends HttpServlet {
             return;
         }
 
+        if (!moderadorService.verificarLongitud(nombreRestaurante)) {
+            request.setAttribute("messageLogin", "El nombre del restaurante excede la longitud máxima permitida.");
+            request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);
+            return;
+        }
+
+        if (!moderadorService.verificarLongitud(descripcion)) {
+            request.setAttribute("messageLogin", "La descripción excede la longitud máxima permitida.");
+            request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);
+            return;
+        }
+
         Resena resena = new Resena(nombreRestaurante, tipoComida, descripcion, usuario);
+
         //3. Hablar con el modelo
         ResenaService resenaService = new ResenaService();
         boolean publicado = resenaService.crear(resena);
+
         //4. Redirigir a la vista
         if (publicado) {
             request.setAttribute("messageLogin", "Reseña publicada con éxito.");

@@ -33,8 +33,17 @@ public class ModeradorService {
     }
 
     public boolean verificarLongitud(String contenido) {
-        // Por ahora, solo devolvemos false.
-        return false;
+        int longitudMaxima = 200; // Longitud máxima permitida
+        return contenido.length() <= longitudMaxima;
     }
+
+    /**
+     * private static final int LONGITUD_MAXIMA = 500;
+     * 
+     * public boolean verificarLongitud(String contenido) {
+     * return contenido.length() <= LONGITUD_MAXIMA;
+     * }
+     * 
+     */
 
 }
