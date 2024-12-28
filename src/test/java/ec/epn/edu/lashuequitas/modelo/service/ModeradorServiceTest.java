@@ -26,4 +26,16 @@ class ModeradorServiceTest {
         assertFalse(moderadorService.verificarOfensivo(contenido));
     }
 
+    @Test
+    void given_ContentExceedingMaxLength_when_VerifyingLength_then_ShouldFailValidation() {
+        String contenido = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ".repeat(20);
+        assertFalse(moderadorService.verificarLongitud(contenido));
+    }
+
+    @Test
+    void given_ContentWithinMaxLength_when_VerifyingLength_then_ShouldPassValidation() {
+        String contenido = "La salchipapa que me comí estuvo muy buena.";
+        assertTrue(moderadorService.verificarLongitud(contenido));
+    }
+
 }

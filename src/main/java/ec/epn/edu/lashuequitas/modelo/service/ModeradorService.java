@@ -5,7 +5,8 @@ import java.util.regex.Matcher;
 
 public class ModeradorService {
     private static final String[] PALABRAS_OFENSIVAS = {
-            "puta", "zorra", "mierda", "tonto", "estúpida", "idiota", "imbécil", "feo", "asqueroso", "burro", "tarado", "bobo",
+            "puta", "zorra", "mierda", "tonto", "estúpida", "idiota", "imbécil", "feo", "asqueroso", "burro", "tarado",
+            "bobo",
             "adefecioso", "malo", "estúpido", "zopenco", "patán", "cretino", "baboso", "loco", "menso", "cobarde",
             "holgazán", "gusano", "mocoso", "caradura", "bruto", "mugroso", "animal", "cerdo",
             "vago", "chismoso", "hipócrita", "mentiroso", "rata", "traidor", "insolente",
@@ -30,4 +31,10 @@ public class ModeradorService {
         Matcher matcher = PATRON_OFENSIVO.matcher(contenido);
         return matcher.find();
     }
+
+    public boolean verificarLongitud(String contenido) {
+        // Por ahora, solo devolvemos false.
+        return false;
+    }
+
 }
