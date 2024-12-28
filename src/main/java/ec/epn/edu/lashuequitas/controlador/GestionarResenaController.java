@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 @WebServlet("/gestionarResena")
 public class GestionarResenaController extends HttpServlet {
@@ -99,20 +100,32 @@ public class GestionarResenaController extends HttpServlet {
 
         //4. Redirigir a la vista
         if (publicado) {
+            // Establecer el mensaje en el atributo de la solicitud
             request.setAttribute("messageLogin", "Reseña publicada con éxito.");
-            request.getRequestDispatcher("vista/Home.jsp").forward(request, response);
+            // Redirigir a la lista de reseñas, pero manteniendo la solicitud (usando forward en lugar de redirect)
+            listar(request, response); // Llama directamente al método listar para mostrar las reseñas
         } else {
+            // Mostrar error y redirigir al formulario
             request.setAttribute("messageLogin", "Error al publicar la reseña");
-            request.getRequestDispatcher("vista/Home.jsp").forward(request, response);
+            request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);
         }
+
     }
 
     private void listar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //1. Obtener parámetros
-        //2. Hablar con el modelo
-        //3. Redirigir a la vista
-        // para pruebas redirige a Home.jsp, pero debería redirigir a la vista de listar reseñas
-        response.sendRedirect("vista/Home.jsp");
-        // response.sendRedirect("vista/ListarResenas.jsp");
+        // Crear instancia del servicio
+        ResenaService resenaService = new ResenaService();
+
+        // Obtener la lista de reseñas
+        List<Resena> resenas = resenaService.listarResenas();
+
+        // Pasar la lista como atributo al JSP
+        request.setAttribute("resenas", resenas);
+
+        // Redirigir al JSP VerResenas.jsp
+        request.getRequestDispatcher("vista/VerResenas.jsp").forward(request, response);
     }
+
+
+
 }

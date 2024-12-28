@@ -103,13 +103,20 @@
     <!-- Botón para crear nueva reseña -->
     <form action="${pageContext.request.contextPath}/gestionarResena?ruta=accederForm" method="get" style="display: inline;">
       <button type="submit" class="button">
-        <span class="icon-plus">+</span> Crear Nueva Reseña
+        <span class="icon-plus">+ </span> Nueva Reseña
       </button>
     </form>
   </div>
 
   <!-- Botón para regresar a Home -->
-  <a href="${pageContext.request.contextPath}/Home.jsp" class="button button-secondary">Regresar a Home</a>
+  <a href="${pageContext.request.contextPath}/vista/Home.jsp" class="button button-secondary">Regresar a Home</a>
+
+  <!-- Mostrar mensaje de éxito si existe -->
+  <c:if test="${not empty messageLogin}">
+    <div class="success-message" style="color: #FF6D6D; font-weight: bold; margin-bottom: 15px;">
+        ${messageLogin}
+    </div>
+  </c:if>
 
   <!-- Mostrar lista de reseñas -->
   <c:choose>
