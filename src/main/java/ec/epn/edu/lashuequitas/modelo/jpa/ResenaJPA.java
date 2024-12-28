@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import ec.epn.edu.lashuequitas.modelo.entidades.Resena;
 import ec.epn.edu.lashuequitas.modelo.entidades.Usuario;
 import java.io.Serializable;
+import java.util.List;
 
 public class ResenaJPA implements Serializable {
 
@@ -48,6 +49,18 @@ public class ResenaJPA implements Serializable {
                 em.getTransaction().rollback(); // Revertir en caso de error
             }
             return false; // Operación fallida
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    public List<Resena> findAllResenas() {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT r FROM Resena r", Resena.class)
+                    .getResultList();
         } finally {
             if (em != null) {
                 em.close();
