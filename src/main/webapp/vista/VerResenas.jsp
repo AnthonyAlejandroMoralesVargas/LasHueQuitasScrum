@@ -123,7 +123,7 @@
           <p style="font-size: 0.9em; color: #666;">
             Creado por: ${resena.usuario.username} el ${resena.fechaCreacion}
           </p>
-          <button class="button button-secondary" onclick="window.location.href='${pageContext.request.contextPath}/gestionarComentario?ruta=listar&id=${resena.id}'">
+          <button class="button button-secondary" onclick="window.location.href='${pageContext.request.contextPath}/gestionarComentario?ruta=listar&idResena=${resena.id}'">
             Ver comentarios
           </button>
         </div>

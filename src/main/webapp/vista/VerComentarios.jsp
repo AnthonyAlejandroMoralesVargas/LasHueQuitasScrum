@@ -141,7 +141,7 @@
 <div class="container">
     <div class="header">
         <h2>Comentarios para la Reseña: ${resena.restaurante}</h2>
-        <a href="${pageContext.request.contextPath}/gestionarResena?ruta=listar" class="button button-secondary">Volver a Reseñas</a>
+        <a href="${pageContext.request.contextPath}/gestionarComentario?ruta=listar" class="button button-secondary">Volver a Reseñas</a>
     </div>
 
     <!-- Mostrar lista de comentarios -->
@@ -164,11 +164,14 @@
     <!-- Formulario para agregar un nuevo comentario -->
     <h3>Agregar un Comentario</h3>
     <form action="${pageContext.request.contextPath}/gestionarComentario?ruta=publicar" method="post">
+        <!-- Campo oculto para enviar el ID de la reseña -->
         <input type="hidden" name="resenaId" value="${resena.id}">
+
         <label for="contenido">Comentario:</label>
         <textarea id="contenido" name="contenido" required></textarea>
         <button type="submit" class="submit-button">Publicar Comentario</button>
     </form>
+
 </div>
 </body>
 </html>

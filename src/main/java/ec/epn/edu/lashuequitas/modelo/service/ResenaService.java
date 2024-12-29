@@ -24,4 +24,8 @@ public class ResenaService {
     public List<Resena> listarResenas() {
         return resenaJPA.findAllResenas();
     }
+
+    public Resena buscarResenaPorId(Long id) {
+        return resenaJPA.findById(id);
+    }
 }

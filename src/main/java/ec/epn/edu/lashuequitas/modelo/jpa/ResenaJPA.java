@@ -67,5 +67,16 @@ public class ResenaJPA implements Serializable {
             }
         }
     }
-    // Implementar un método para buscar una reseña por ID
+
+    // Método para buscar una reseña por ID
+    public Resena findById(Long id) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.find(Resena.class, id); // Busca y devuelve la reseña por ID
+        } finally {
+            if (em != null) {
+                em.close(); // Asegura que el EntityManager se cierre
+            }
+        }
+    }
 }
