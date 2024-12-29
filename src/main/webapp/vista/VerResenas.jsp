@@ -117,11 +117,15 @@
     <c:when test="${not empty resenas}">
       <c:forEach var="resena" items="${resenas}">
         <div class="review">
+          <h1 style="display: none;">${resena.id}</h1>
           <h3>${resena.restaurante} - ${resena.tipoComida}</h3>
           <p>${resena.descripcion}</p>
           <p style="font-size: 0.9em; color: #666;">
             Creado por: ${resena.usuario.username} el ${resena.fechaCreacion}
           </p>
+          <button class="button button-secondary" onclick="window.location.href='${pageContext.request.contextPath}/gestionarComentario?ruta=listar&id=${resena.id}'">
+            Ver comentarios
+          </button>
         </div>
       </c:forEach>
     </c:when>

@@ -110,8 +110,6 @@
     <!-- Enlaces de navegación -->
     <!--  -->
     <a href="${pageContext.request.contextPath}/gestionarResena?ruta=listar" class="button">Ir a Reseñas</a>
-    <a href="${pageContext.request.contextPath}/AnuncioSv">Ir a Anuncios</a>
-    <a href="${pageContext.request.contextPath}/PromocionSv">Ir a Promociones</a>
     <a href="${pageContext.request.contextPath}/login?ruta=logout">Cerrar sesión</a>
   </div>
 </div>
