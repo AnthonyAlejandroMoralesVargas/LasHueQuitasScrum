@@ -28,7 +28,7 @@ class ModeradorServiceTest {
 
     @Test
     void given_ContentExceedingMaxLength_when_VerifyingLength_then_ShouldFailValidation() {
-        String contenido = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ".repeat(20);
+        String contenido = "El hornado de este lugar es genial, no se lo pueden perder".repeat(20);
         assertFalse(moderadorService.verificarLongitud(contenido));
     }
 

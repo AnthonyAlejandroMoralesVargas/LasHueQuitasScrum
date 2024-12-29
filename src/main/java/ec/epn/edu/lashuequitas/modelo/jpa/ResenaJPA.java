@@ -67,4 +67,5 @@ public class ResenaJPA implements Serializable {
             }
         }
     }
+    // Implementar un método para buscar una reseña por ID
 }
