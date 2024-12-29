@@ -111,12 +111,6 @@
   <!-- Botón para regresar a Home -->
   <a href="${pageContext.request.contextPath}/vista/Home.jsp" class="button button-secondary">Regresar a Home</a>
 
-  <!-- Mostrar mensaje de éxito si existe -->
-  <c:if test="${not empty messageLogin}">
-    <div class="success-message" style="color: #FF6D6D; font-weight: bold; margin-bottom: 15px;">
-        ${messageLogin}
-    </div>
-  </c:if>
 
   <!-- Mostrar lista de reseñas -->
   <c:choose>
@@ -132,7 +126,9 @@
       </c:forEach>
     </c:when>
     <c:otherwise>
-      <p>No hay reseñas disponibles en este momento</p>
+      <div class="success-message" style="color: #FF6D6D; font-weight: bold; margin-bottom: 15px;">
+          ${messageLogin}
+      </div>
     </c:otherwise>
   </c:choose>
 </div>

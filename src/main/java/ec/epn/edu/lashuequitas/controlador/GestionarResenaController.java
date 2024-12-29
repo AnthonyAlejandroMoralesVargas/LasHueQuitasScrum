@@ -119,6 +119,11 @@ public class GestionarResenaController extends HttpServlet {
         // Obtener la lista de reseñas
         List<Resena> resenas = resenaService.listarResenas();
 
+        // Verificar si la lista de reseñas está vacía
+        if (resenas.isEmpty()) {
+            request.setAttribute("messageLogin", "No hay reseñas disponibles en este momento");
+        }
+
         // Pasar la lista como atributo al JSP
         request.setAttribute("resenas", resenas);
 
