@@ -46,6 +46,23 @@ class ResenaServiceTest {
     }
 
     @Test
+    void given_InvalidDetails_when_CreatingResena_then_ResenaIsNotCreated() {
+        // 1. Arrange
+        Usuario usuario = new Usuario("Pepe", "pepe@example.com", "hashedPassword");
+        Resena resena = new Resena("", "", "", usuario); // Detalles inválidos
+
+        // Configurar el mock para que devuelva false
+        when(resenaJPA.create(resena)).thenReturn(false);
+
+        // 2. Act
+        boolean result = resenaService.crear(resena);
+
+        // 3. Assert
+        assertFalse(result);
+        verify(resenaJPA, times(1)).create(resena);
+    }
+
+    @Test
     void given_ValidId_when_BuscarResenaPorId_then_ReturnsCorrectResena() {
 
         Long id = 1L;

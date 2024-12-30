@@ -8,6 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -60,5 +63,43 @@ class ComentarioServiceTest {
         System.out.println(result);
         assertFalse(result);
         verify(comentarioJPA, times(1)).create(comentario);
+    }
+
+    @Test
+    void given_ValidIdResena_when_ListarComentariosPorResena_then_ReturnsComentariosList() {
+        // 1. Arrange
+        Long idResena = 1L;
+        Usuario usuario = new Usuario("Sebas", "Sebas@example.com", "123Sebas");
+        Resena resena = new Resena("Campero", "Postres", "Deliciosos postres", usuario);
+        Comentario comentario1 = new Comentario("Me gusto", usuario, resena);
+        Comentario comentario2 = new Comentario("No me gusto", usuario, resena);
+        List<Comentario> comentarios = Arrays.asList(comentario1, comentario2);
+
+        when(comentarioJPA.findAllComentariosByResena(idResena)).thenReturn(comentarios);
+
+        // 2. Act
+        List<Comentario> result = comentarioService.listarComentariosPorResena(idResena);
+
+        // 3. Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(comentario1, result.get(0));
+        assertEquals(comentario2, result.get(1));
+        verify(comentarioJPA, times(1)).findAllComentariosByResena(idResena);
+    }
+
+    @Test
+    void given_InvalidIdResena_when_ListarComentariosPorResena_then_ReturnsEmptyList() {
+        // 1. Arrange
+        Long idResena = 999L; // Un ID que no existe
+        when(comentarioJPA.findAllComentariosByResena(idResena)).thenReturn(Arrays.asList());
+
+        // 2. Act
+        List<Comentario> result = comentarioService.listarComentariosPorResena(idResena);
+
+        // 3. Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(comentarioJPA, times(1)).findAllComentariosByResena(idResena);
     }
 }

@@ -38,4 +38,18 @@ class ModeradorServiceTest {
         assertTrue(moderadorService.verificarLongitud(contenido));
     }
 
+    @Test
+    void given_EmptyContent_when_VerifyingOffensive_then_ShouldNotDetectOffensiveWord() {
+        String contenido = "";
+        assertFalse(moderadorService.verificarOfensivo(contenido));
+    }
+
+
+    @Test
+    void given_EmptyContent_when_VerifyingLength_then_ShouldPassValidation() {
+        String contenido = "";
+        assertTrue(moderadorService.verificarLongitud(contenido));
+    }
+
+
 }
