@@ -81,13 +81,13 @@ public class GestionarResenaController extends HttpServlet {
         }
 
         if (!moderadorService.verificarLongitud(nombreRestaurante)) {
-            request.setAttribute("messageLogin", "El nombre del restaurante excede la longitud máxima permitida.");
+            request.setAttribute("messageLogin", "La reseña excede los 200 caracteres y no se ha publicado.");
             request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);
             return;
         }
 
         if (!moderadorService.verificarLongitud(descripcion)) {
-            request.setAttribute("messageLogin", "La descripción excede la longitud máxima permitida.");
+            request.setAttribute("messageLogin", "La reseña excede los 200 caracteres y no se ha publicado.");
             request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);
             return;
         }
@@ -101,9 +101,12 @@ public class GestionarResenaController extends HttpServlet {
         //4. Redirigir a la vista
         if (publicado) {
             // Establecer el mensaje en el atributo de la solicitud
-            request.setAttribute("messageLogin", "Reseña publicada con éxito.");
+            request.setAttribute("messagePublicacion", "Reseña publicada");
             // Redirigir a la lista de reseñas, pero manteniendo la solicitud (usando forward en lugar de redirect)
-            listar(request, response); // Llama directamente al método listar para mostrar las reseñas
+            //listar(request, response); // Llama directamente al método listar para mostrar las reseñas
+            //request.getRequestDispatcher("vista/VerResenas.jsp").forward(request, response);
+            request.getRequestDispatcher("/gestionarResena?ruta=listar").forward(request, response);
+
         } else {
             // Mostrar error y redirigir al formulario
             request.setAttribute("messageLogin", "Error al publicar la reseña");
@@ -115,17 +118,24 @@ public class GestionarResenaController extends HttpServlet {
     private void listar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Crear instancia del servicio
         ResenaService resenaService = new ResenaService();
+        String messagePublicacion = request.getParameter("messagePublicacion");
 
         // Obtener la lista de reseñas
         List<Resena> resenas = resenaService.listarResenas();
 
         // Verificar si la lista de reseñas está vacía
         if (resenas.isEmpty()) {
-            request.setAttribute("messageLogin", "No hay reseñas disponibles en este momento");
+            request.setAttribute("messageEmpty", "No hay reseñas disponibles en este momento");
         }
+
+        if (messagePublicacion != null) {
+            request.setAttribute("messagePublicacion", messagePublicacion);
+        }
+
 
         // Pasar la lista como atributo al JSP
         request.setAttribute("resenas", resenas);
+
 
         // Redirigir al JSP VerResenas.jsp
         request.getRequestDispatcher("vista/VerResenas.jsp").forward(request, response);

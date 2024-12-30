@@ -93,6 +93,39 @@
       margin: 5px 0;
       color: #555;
     }
+    /* Estilos del modal */
+    .modal {
+      display: none; /* Oculto por defecto */
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 10px; /* Modal en la parte superior */
+      width: 100%;
+      justify-content: center;
+      align-items: flex-start; /* Alinear en la parte superior */
+    }
+
+    .modal-content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+      color: #FF6D6D;
+      font-weight: bold;
+    }
+
+    .modal-body {
+      font-size: 1em;
+      color: #333;
+    }
   </style>
 </head>
 <body>
@@ -131,10 +164,33 @@
     </c:when>
     <c:otherwise>
       <div class="success-message" style="color: #FF6D6D; font-weight: bold; margin-bottom: 15px;">
-          ${messageLogin}
+          ${messageEmpty}
       </div>
     </c:otherwise>
   </c:choose>
 </div>
+
+<!-- Modal -->
+<div id="messageModal" class="modal">
+  <div class="modal-content">
+
+    <div class="modal-body">${messagePublicacion}</div>
+  </div>
+</div>
+<script>
+  // Mostrar el modal si hay un mensaje
+  window.onload = function () {
+    const message = '${messagePublicacion}';
+    if (message.trim()) {
+      const modal = document.getElementById('messageModal');
+      modal.style.display = 'flex';
+      // Ocultar el modal automáticamente después de 5 segundos
+      setTimeout(function () {
+        modal.style.display = 'none';
+      }, 5000);
+    }
+  };
+</script>
+
 </body>
 </html>

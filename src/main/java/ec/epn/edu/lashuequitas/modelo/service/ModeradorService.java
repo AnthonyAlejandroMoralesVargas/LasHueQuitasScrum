@@ -8,7 +8,7 @@ public class ModeradorService {
             "puta", "zorra", "mierda", "tonto", "estúpida", "idiota", "imbécil", "feo", "asqueroso", "burro", "tarado",
             "bobo",
             "adefecioso", "malo", "estúpido", "zopenco", "patán", "cretino", "baboso", "loco", "menso", "cobarde",
-            "holgazán", "gusano", "mocoso", "caradura", "bruto", "mugroso", "animal", "cerdo",
+            "holgazán", "gusano", "mocoso", "caradura", "bruto", "mugroso", "animal",
             "vago", "chismoso", "hipócrita", "mentiroso", "rata", "traidor", "insolente",
             "ignorante", "payaso", "sucio", "maleducado", "necio", "desgraciado", "bastardo", "basura"
     };
