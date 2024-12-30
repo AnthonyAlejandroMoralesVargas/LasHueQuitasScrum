@@ -6,13 +6,22 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class UsuarioService {
 
+    private final UsuarioJPA usuarioJPA;
+
+    public UsuarioService() {
+        this.usuarioJPA = new UsuarioJPA();
+    }
+
+    public UsuarioService(UsuarioJPA usuarioJPA) {
+        this.usuarioJPA = usuarioJPA;
+    }
+
+
     public boolean crear(Usuario usuario) {
-        UsuarioJPA usuarioJPA = new UsuarioJPA();
         return usuarioJPA.create(usuario);
     }
 
     public Usuario autenticar(String email, String password) {
-        UsuarioJPA usuarioJPA = new UsuarioJPA();
         Usuario usuarioEncontrado = usuarioJPA.findByEmail(email);
         if (usuarioEncontrado != null && BCrypt.checkpw(password, usuarioEncontrado.getPasswordHash())) {
             return usuarioEncontrado;
