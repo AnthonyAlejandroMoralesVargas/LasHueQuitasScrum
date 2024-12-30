@@ -1,0 +1,65 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'self-hosted' # Cambiar a 'self-hosted' si usas un agente local
+
+variables:
+  javaVersion: '22.0.2'
+  mavenOptions: '-Xmx1024m'
+  tomcatDir: 'D:\6toSemestre\apache-tomcat-10.1.31'
+
+stages:
+- stage: BuildAndTest
+  displayName: 'Build and Test'
+  jobs:
+  - job: Build
+    displayName: 'Build Project'
+    steps:
+    # Paso 1: Configurar Java JDK
+    - task: UseJavaVersion@1
+      inputs:
+        versionSpec: '22'
+        jdkArchitecture: 'x64'
+
+    # Paso 2: Descargar dependencias y construir el proyecto
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '$(mavenOptions)'
+        javaHomeOption: 'JDKVersion'
+        jdkVersion: '22'
+        goals: 'clean install'
+
+    # Paso 3: Ejecutar pruebas
+    - script: |
+        mvn test
+      displayName: 'Run Unit Tests'
+
+- stage: Deploy
+  displayName: 'Deploy to Local Tomcat'
+  dependsOn: BuildAndTest
+  condition: succeeded()
+  jobs:
+  - job: DeployToLocalTomcat
+    displayName: 'Deploy WAR to Local Tomcat'
+    steps:
+    # Paso 1: Configurar Java JDK
+    - task: UseJavaVersion@1
+      inputs:
+        versionSpec: '22'
+        jdkArchitecture: 'x64'
+
+    # Paso 2: Copiar el WAR generado al directorio webapps de Tomcat
+    - powershell: |
+        Write-Host "Deploying WAR to Tomcat at $(tomcatDir)\webapps..."
+        Copy-Item -Path target\*.war -Destination "$(tomcatDir)\webapps" -Force
+        Write-Host "WAR successfully deployed."
+
+    # Paso 3: Reiniciar Tomcat (opcional)
+    - powershell: |
+        Write-Host "Stopping Tomcat..."
+        & "$(tomcatDir)\bin\shutdown.bat"
+        Write-Host "Starting Tomcat..."
+        & "$(tomcatDir)\bin\startup.bat"
+      displayName: 'Restart Tomcat Server'
