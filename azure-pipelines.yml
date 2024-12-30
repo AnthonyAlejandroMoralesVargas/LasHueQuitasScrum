@@ -2,11 +2,11 @@ trigger:
 - main
 
 pool:
-  vmImage: 'self-hosted' # Cambiar a 'self-hosted' si usas un agente local
+  name: 'LocalAgentPool'
 
 variables:
-  javaVersion: '22.0.2'
-  mavenOptions: '-Xmx1024m'
+  javaHome: 'C:\Program Files\Java\jdk-22'
+  mavenHome: 'C:\Program Files\Apache\Maven'
   tomcatDir: 'D:\6toSemestre\apache-tomcat-10.1.31'
 
 stages:
@@ -16,25 +16,57 @@ stages:
   - job: Build
     displayName: 'Build Project'
     steps:
-    # Paso 1: Configurar Java JDK
-    - task: UseJavaVersion@1
-      inputs:
-        versionSpec: '22'
-        jdkArchitecture: 'x64'
+    # Configurar Variables de Entorno para Java y Maven
+    - powershell: |
+        Write-Host "Setting up environment variables..."
+        [Environment]::SetEnvironmentVariable("JAVA_HOME", "${{ variables.javaHome }}", "Process")
+        [Environment]::SetEnvironmentVariable("Path", "${{ variables.javaHome }}\bin;" + [Environment]::GetEnvironmentVariable("Path", "Process"), "Process")
+        [Environment]::SetEnvironmentVariable("M2_HOME", "${{ variables.mavenHome }}", "Process")
+        [Environment]::SetEnvironmentVariable("Path", "${{ variables.mavenHome }}\bin;" + [Environment]::GetEnvironmentVariable("Path", "Process"), "Process")
 
-    # Paso 2: Descargar dependencias y construir el proyecto
-    - task: Maven@3
-      inputs:
-        mavenPomFile: 'pom.xml'
-        mavenOptions: '$(mavenOptions)'
-        javaHomeOption: 'JDKVersion'
-        jdkVersion: '22'
-        goals: 'clean install'
+        Write-Host "Checking Java installation..."
+        try {
+            java -version
+            Write-Host "Java is configured properly."
+        } catch {
+            Write-Host "Error: Java is not configured properly."
+            exit 1
+        }
 
-    # Paso 3: Ejecutar pruebas
-    - script: |
-        mvn test
-      displayName: 'Run Unit Tests'
+        Write-Host "Checking Maven installation..."
+        try {
+            & "${{ variables.mavenHome }}\bin\mvn.cmd" -version
+            Write-Host "Maven is configured properly."
+        } catch {
+            Write-Host "Error: Maven is not configured properly."
+            exit 1
+        }
+        Write-Host "Environment setup completed."
+      displayName: 'Set Up Java and Maven'
+
+    # Debug Variables
+    - powershell: |
+        Write-Host "DEBUG: Checking environment variables..."
+        Write-Host "JAVA_HOME: $env:JAVA_HOME"
+        Write-Host "M2_HOME: $env:M2_HOME"
+        Write-Host "PATH: $env:Path"
+      displayName: 'Debug Environment Variables'
+
+    # Construir Proyecto con Maven
+    - powershell: |
+        try {
+            Write-Host "Building Maven Project..."
+            & "${{ variables.mavenHome }}\bin\mvn.cmd" clean install
+            if (!(Test-Path -Path "$(System.DefaultWorkingDirectory)\target")) {
+                Write-Host "Error: Maven did not generate the 'target' directory."
+                exit 1
+            }
+            Write-Host "Maven Build completed successfully."
+        } catch {
+            Write-Host "Error during Maven build: $($_.Exception.Message)"
+            exit 1
+        }
+      displayName: 'Build with Maven'
 
 - stage: Deploy
   displayName: 'Deploy to Local Tomcat'
@@ -44,22 +76,43 @@ stages:
   - job: DeployToLocalTomcat
     displayName: 'Deploy WAR to Local Tomcat'
     steps:
-    # Paso 1: Configurar Java JDK
-    - task: UseJavaVersion@1
-      inputs:
-        versionSpec: '22'
-        jdkArchitecture: 'x64'
-
-    # Paso 2: Copiar el WAR generado al directorio webapps de Tomcat
+    # Reforzar el comando mvn install
     - powershell: |
-        Write-Host "Deploying WAR to Tomcat at $(tomcatDir)\webapps..."
-        Copy-Item -Path target\*.war -Destination "$(tomcatDir)\webapps" -Force
-        Write-Host "WAR successfully deployed."
-
-    # Paso 3: Reiniciar Tomcat (opcional)
+        try {
+            Write-Host "Forcing Maven Install before Deploy..."
+            & "${{ variables.mavenHome }}\bin\mvn.cmd" install
+            Write-Host "Maven Install completed successfully."
+        } catch {
+            Write-Host "Error during Maven install: $($_.Exception.Message)"
+            exit 1
+        }
+      displayName: 'Force Maven Install'
+    # Copiar el WAR generado al directorio de despliegue de Tomcat
     - powershell: |
-        Write-Host "Stopping Tomcat..."
-        & "$(tomcatDir)\bin\shutdown.bat"
-        Write-Host "Starting Tomcat..."
-        & "$(tomcatDir)\bin\startup.bat"
+        try {
+            Write-Host "Deploying WAR to Tomcat..."
+            $artifactPath = "$(System.DefaultWorkingDirectory)\target\*.war"
+            if (!(Test-Path -Path $artifactPath)) {
+                Write-Host "WAR file not found in: $artifactPath"
+                exit 1
+            }
+            Copy-Item -Path $artifactPath -Destination "${{ variables.tomcatDir }}\webapps" -Force
+            Write-Host "Deployment completed."
+        } catch {
+            Write-Host "Error during deployment: $($_.Exception.Message)"
+            exit 1
+        }
+      displayName: 'Deploy WAR to Tomcat'
+
+    # Reiniciar Tomcat
+    - powershell: |
+        try {
+            Write-Host "Stopping Tomcat..."
+            & "${{ variables.tomcatDir }}\bin\shutdown.bat"
+            Write-Host "Starting Tomcat..."
+            & "${{ variables.tomcatDir }}\bin\startup.bat"
+        } catch {
+            Write-Host "Error during Tomcat restart: $($_.Exception.Message)"
+            exit 1
+        }
       displayName: 'Restart Tomcat Server'
