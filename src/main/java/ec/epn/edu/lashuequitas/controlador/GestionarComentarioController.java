@@ -4,6 +4,7 @@ import ec.epn.edu.lashuequitas.modelo.entidades.Comentario;
 import ec.epn.edu.lashuequitas.modelo.entidades.Resena;
 import ec.epn.edu.lashuequitas.modelo.entidades.Usuario;
 import ec.epn.edu.lashuequitas.modelo.service.ComentarioService;
+import ec.epn.edu.lashuequitas.modelo.service.ModeradorService;
 import ec.epn.edu.lashuequitas.modelo.service.ResenaService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -103,6 +104,14 @@ public class GestionarComentarioController extends HttpServlet {
         if (contenido == null || contenido.trim().isEmpty()) {
             System.out.println("Error: Contenido del comentario vacío.");
             request.setAttribute("message", "El contenido del comentario no puede estar vacío.");
+            request.getRequestDispatcher("vista/VerComentarios.jsp").forward(request, response);
+            return;
+        }
+
+        ModeradorService moderadorService = new ModeradorService();
+
+        if (!moderadorService.verificarLongitud(contenido)) {
+            request.setAttribute("messageLogin", "El contenido excede la longitud máxima permitida.");
             request.getRequestDispatcher("vista/VerComentarios.jsp").forward(request, response);
             return;
         }

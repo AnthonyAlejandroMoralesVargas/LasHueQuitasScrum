@@ -135,6 +135,12 @@
         .submit-button:hover {
             background-color: #FF4A4A;
         }
+
+        .message-error {
+            color: #FF4A4A;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -142,7 +148,10 @@
     <div class="header">
         <h2>Comentarios para la Reseña: ${resena.restaurante}</h2>
         <a href="${pageContext.request.contextPath}/gestionarComentario?ruta=listar" class="button button-secondary">Volver a Reseñas</a>
+
     </div>
+
+
 
     <!-- Mostrar lista de comentarios -->
     <c:choose>
@@ -168,6 +177,12 @@
         <input type="hidden" name="resenaId" value="${resena.id}">
 
         <label for="contenido">Comentario:</label>
+        <!-- Mostrar mensaje de error o éxito -->
+        <c:if test="${not empty messageLogin}">
+            <div class="message-error">
+                    ${messageLogin}
+            </div>
+        </c:if>
         <textarea id="contenido" name="contenido" required></textarea>
         <button type="submit" class="submit-button">Publicar Comentario</button>
     </form>
