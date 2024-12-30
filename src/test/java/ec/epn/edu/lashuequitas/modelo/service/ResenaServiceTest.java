@@ -33,15 +33,44 @@ class ResenaServiceTest {
         Resena resena = new Resena("La Casa del Sabor", "Platos principales",
                 "Excelente comida", usuario);
 
-        // Configurar el mock para que devuelva true
+
         when(resenaJPA.create(resena)).thenReturn(true);
 
-        // 2. Act
+
         boolean result = resenaService.crear(resena);
 
-        // 3. Assert
+
         System.out.println(result);
         assertTrue(result);
         verify(resenaJPA, times(1)).create(resena);
     }
+
+    @Test
+    void given_ValidId_when_BuscarResenaPorId_then_ReturnsCorrectResena() {
+
+        Long id = 1L;
+        Resena expectedResena = new Resena("La Casa del Sabor", "Platos principales",
+                "Excelente comida", new Usuario("Pepe", "pepe@example.com", "123pepe"));
+
+        when(resenaJPA.findById(id)).thenReturn(expectedResena);
+
+        Resena actualResena = resenaService.buscarResenaPorId(id);
+
+        assertNotNull(actualResena);
+        assertEquals(expectedResena, actualResena);
+        verify(resenaJPA, times(1)).findById(id);
+    }
+
+    @Test
+    void given_InvalidId_when_BuscarResenaPorId_then_ReturnsNull() {
+
+        Long id = 99L;
+
+        when(resenaJPA.findById(id)).thenReturn(null);
+
+        Resena actualResena = resenaService.buscarResenaPorId(id);
+        assertNull(actualResena);
+        verify(resenaJPA, times(1)).findById(id);
+    }
+
 }
