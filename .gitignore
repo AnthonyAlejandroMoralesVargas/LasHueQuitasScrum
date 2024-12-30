@@ -8,10 +8,11 @@ target/
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/dataSources.xml
 *.iws
 *.iml
 *.ipr
-
+derby.log
 ### Eclipse ###
 .apt_generated
 .classpath

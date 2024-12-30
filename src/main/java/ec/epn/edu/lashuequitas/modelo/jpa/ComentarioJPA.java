@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class ComentarioJPA implements Serializable {
 
@@ -53,6 +54,19 @@ public class ComentarioJPA implements Serializable {
             }
             return false;
         }finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    public List<Comentario> findAllComentariosByResena(Long resenaId) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT c FROM Comentario c WHERE c.resena.id = :resenaId", Comentario.class)
+                    .setParameter("resenaId", resenaId)
+                    .getResultList();
+        } finally {
             if (em != null) {
                 em.close();
             }
