@@ -110,8 +110,16 @@ public class GestionarComentarioController extends HttpServlet {
 
         ModeradorService moderadorService = new ModeradorService();
 
+        if (moderadorService.verificarOfensivo(contenido)) {
+            request.setAttribute("messageLogin", "El comentario contiene contenido ofensivo.");
+            request.setAttribute("resena", resena);
+            request.getRequestDispatcher("vista/VerComentarios.jsp").forward(request, response);
+            return;
+        }
+
         if (!moderadorService.verificarLongitud(contenido)) {
             request.setAttribute("messageLogin", "El contenido excede la longitud máxima permitida.");
+            request.setAttribute("resena", resena);
             request.getRequestDispatcher("vista/VerComentarios.jsp").forward(request, response);
             return;
         }
