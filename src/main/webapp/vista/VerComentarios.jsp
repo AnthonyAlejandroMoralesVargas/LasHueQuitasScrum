@@ -166,7 +166,9 @@
             </c:forEach>
         </c:when>
         <c:otherwise>
-            <p>No hay comentarios para esta reseña.</p>
+            <div class="success-message" style="color: #FF6D6D; font-weight: bold; margin-bottom: 15px;">
+                    ${messageLogin2}
+            </div>
         </c:otherwise>
     </c:choose>
 

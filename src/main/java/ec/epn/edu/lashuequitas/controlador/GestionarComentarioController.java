@@ -67,6 +67,11 @@ public class GestionarComentarioController extends HttpServlet {
         // Obtener los comentarios de la reseña
         ComentarioService comentarioService = new ComentarioService();
         List<Comentario> comentarios = comentarioService.listarComentariosPorResena(idResena);
+        // Verificar si la lista de reseñas está vacía
+        if (comentarios.isEmpty()) {
+            request.setAttribute("messageLogin2", "No hay comentarios disponibles en este momento");
+        }
+
 
         // Pasar la reseña y los comentarios al JSP
         request.setAttribute("resena", resena);
