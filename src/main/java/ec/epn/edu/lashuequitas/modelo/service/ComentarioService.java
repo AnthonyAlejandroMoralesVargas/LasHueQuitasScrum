@@ -24,5 +24,10 @@ public class ComentarioService {
         return comentarioJPA.create(comentario);
     }
 
+    // Método para listar comentarios de una reseña específica
+    public List<Comentario> listarComentariosPorResena(Long idResena) {
+        return comentarioJPA.findAllComentariosByResena(idResena);
+    }
+
 
 }

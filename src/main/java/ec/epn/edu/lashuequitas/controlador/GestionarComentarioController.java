@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/gestionarComentario")
 public class GestionarComentarioController extends HttpServlet {
@@ -41,7 +42,6 @@ public class GestionarComentarioController extends HttpServlet {
     }
 
     private void listar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // 1. Obtener el parámetro idResena desde la URL
         String idResenaParam = request.getParameter("idResena");
         Long idResena;
 
@@ -54,7 +54,6 @@ public class GestionarComentarioController extends HttpServlet {
             return;
         }
 
-        // 2. Obtener la reseña desde la base de datos
         ResenaService resenaService = new ResenaService();
         Resena resena = resenaService.buscarResenaPorId(idResena);
 
@@ -65,13 +64,17 @@ public class GestionarComentarioController extends HttpServlet {
             return;
         }
 
-        // 3. Pasar la reseña al JSP
-        request.setAttribute("resena", resena);
-        request.setAttribute("idResena", idResena);
+        // Obtener los comentarios de la reseña
+        ComentarioService comentarioService = new ComentarioService();
+        List<Comentario> comentarios = comentarioService.listarComentariosPorResena(idResena);
 
-        // 4. Redirigir al JSP para mostrar los comentarios
+        // Pasar la reseña y los comentarios al JSP
+        request.setAttribute("resena", resena);
+        request.setAttribute("comentarios", comentarios);
+
         request.getRequestDispatcher("vista/VerComentarios.jsp").forward(request, response);
     }
+
 
     private void publicar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
@@ -139,7 +142,8 @@ public class GestionarComentarioController extends HttpServlet {
         // Redirigir de vuelta a la reseña con los comentarios actualizados
         request.setAttribute("resena", resena);
 
-        request.getRequestDispatcher("vista/VerComentarios.jsp").forward(request, response);
+        // Redirigir de vuelta a la página con los comentarios actualizados
+        response.sendRedirect(request.getContextPath() + "/gestionarComentario?ruta=listar&idResena=" + resenaId);
     }
 
 

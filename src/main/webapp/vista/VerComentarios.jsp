@@ -147,7 +147,7 @@
 <div class="container">
     <div class="header">
         <h2>Comentarios para la Reseña: ${resena.restaurante}</h2>
-        <a href="${pageContext.request.contextPath}/gestionarComentario?ruta=listar" class="button button-secondary">Volver a Reseñas</a>
+        <a href="${pageContext.request.contextPath}/gestionarResena?ruta=listar" class="button button-secondary">Volver a Reseñas</a>
 
     </div>
 
