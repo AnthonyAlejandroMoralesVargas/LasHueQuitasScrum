@@ -51,11 +51,11 @@ stages:
         Write-Host "PATH: $env:Path"
       displayName: 'Debug Environment Variables'
 
-    # Construir Proyecto con Maven
+    # Construir Proyecto con Maven (clean install)
     - powershell: |
         try {
             Write-Host "Building Maven Project..."
-            & "${{ variables.mavenHome }}\bin\mvn.cmd" clean package
+            & "${{ variables.mavenHome }}\bin\mvn.cmd" clean install
             if (!(Test-Path -Path "$(System.DefaultWorkingDirectory)\target")) {
                 Write-Host "Error: Maven did not generate the 'target' directory."
                 exit 1
@@ -65,9 +65,20 @@ stages:
             Write-Host "Error during Maven build: $($_.Exception.Message)"
             exit 1
         }
-      displayName: 'Build with Maven'
+      displayName: 'Build with Maven (Clean Install)'
 
     # Publicar Artefactos
+    - powershell: |
+        Write-Host "Forcing Maven Install before publishing artifact..."
+        try {
+            & "${{ variables.mavenHome }}\bin\mvn.cmd" install
+            Write-Host "Maven Install completed successfully."
+        } catch {
+            Write-Host "Error during Maven install: $($_.Exception.Message)"
+            exit 1
+        }
+      displayName: 'Force Maven Install'
+
     - task: PublishBuildArtifacts@1
       inputs:
         pathToPublish: '$(System.DefaultWorkingDirectory)\target\*.war'
