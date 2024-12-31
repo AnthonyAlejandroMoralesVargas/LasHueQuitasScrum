@@ -65,46 +65,26 @@ public class GestionarResenaController extends HttpServlet {
         String tipoComida = request.getParameter("txtTipoComida");
         String descripcion = request.getParameter("txtDescripcion");
 
-        // 2. Verificar si el título o la descripción contienen palabras ofensivas
-        ModeradorService moderadorService = new ModeradorService();
+        // 2. Hablar con el modelo
+        ResenaService resenaService = new ResenaService();
 
-        if (moderadorService.verificarOfensivo(nombreRestaurante)) {
-            request.setAttribute("messageLogin", "La reseña contiene palabras ofensivas y no se ha publicado.");
-            request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);
-            return;
-        }
+        String isOffensive = resenaService.validarContenidoResena(nombreRestaurante, descripcion);
+        String isTooLong = resenaService.validarLongitudResena(nombreRestaurante, descripcion);
 
-        if (moderadorService.verificarOfensivo(descripcion)) {
-            request.setAttribute("messageLogin", "La reseña contiene palabras ofensivas y no se ha publicado.");
-            request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);
-            return;
-        }
-
-        if (!moderadorService.verificarLongitud(nombreRestaurante)) {
-            request.setAttribute("messageLogin", "La reseña excede los 200 caracteres y no se ha publicado.");
-            request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);
-            return;
-        }
-
-        if (!moderadorService.verificarLongitud(descripcion)) {
-            request.setAttribute("messageLogin", "La reseña excede los 200 caracteres y no se ha publicado.");
+        if (isOffensive != null || isTooLong != null) {
+            request.setAttribute("messageLogin", isOffensive != null ? isOffensive : isTooLong);
             request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);
             return;
         }
 
         Resena resena = new Resena(nombreRestaurante, tipoComida, descripcion, usuario);
 
-        //3. Hablar con el modelo
-        ResenaService resenaService = new ResenaService();
         boolean publicado = resenaService.crear(resena);
 
-        //4. Redirigir a la vista
+        //3. Redirigir a la vista
         if (publicado) {
             // Establecer el mensaje en el atributo de la solicitud
             request.setAttribute("messagePublicacion", "Reseña publicada");
-            // Redirigir a la lista de reseñas, pero manteniendo la solicitud (usando forward en lugar de redirect)
-            //listar(request, response); // Llama directamente al método listar para mostrar las reseñas
-            //request.getRequestDispatcher("vista/VerResenas.jsp").forward(request, response);
             request.getRequestDispatcher("/gestionarResena?ruta=listar").forward(request, response);
 
         } else {
