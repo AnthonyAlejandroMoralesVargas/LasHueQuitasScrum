@@ -106,20 +106,13 @@
     }
 
     .modal-content {
-      background-color: #fff;
+      background-color: #dc8b8b;
       padding: 20px;
       border-radius: 10px;
       text-align: center;
       width: 90%;
       max-width: 400px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    .modal-header {
-      font-size: 1.5em;
-      margin-bottom: 10px;
-      color: #FF6D6D;
-      font-weight: bold;
     }
 
     .modal-body {
