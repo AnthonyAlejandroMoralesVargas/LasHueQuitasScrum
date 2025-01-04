@@ -106,7 +106,7 @@
     }
 
     .modal-content {
-      background-color: #dc8b8b;
+      background-color: #fff;
       padding: 20px;
       border-radius: 10px;
       text-align: center;

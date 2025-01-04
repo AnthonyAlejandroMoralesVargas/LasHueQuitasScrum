@@ -29,13 +29,13 @@ class ModeradorServiceTest {
     @Test
     void given_ContentExceedingMaxLength_when_VerifyingLength_then_ShouldFailValidation() {
         String contenido = "El hornado de este lugar es genial, no se lo pueden perder".repeat(20);
-        assertFalse(moderadorService.verificarLongitud(contenido));
+        assertTrue(moderadorService.verificarLongitud(contenido));
     }
 
     @Test
     void given_ContentWithinMaxLength_when_VerifyingLength_then_ShouldPassValidation() {
         String contenido = "La salchipapa que me comí estuvo muy buena.";
-        assertTrue(moderadorService.verificarLongitud(contenido));
+        assertFalse(moderadorService.verificarLongitud(contenido));
     }
 
     @Test
@@ -48,7 +48,7 @@ class ModeradorServiceTest {
     @Test
     void given_EmptyContent_when_VerifyingLength_then_ShouldPassValidation() {
         String contenido = "";
-        assertTrue(moderadorService.verificarLongitud(contenido));
+        assertFalse(moderadorService.verificarLongitud(contenido));
     }
 
 

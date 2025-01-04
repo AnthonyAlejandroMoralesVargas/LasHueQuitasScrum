@@ -14,9 +14,10 @@ public class ModeradorService {
     };
 
     private static final Pattern PATRON_OFENSIVO;
+    private static final int LONGITUD_MAXIMA = 200;
 
     static {
-        // Construcción del patrón usando delimitadores de palabras
+        // Construimos la expresión regular con todas las palabras ofensivas (ignora mayúsculas/minúsculas)
         String pattern = "\\b(" + String.join("|", PALABRAS_OFENSIVAS) + ")\\b";
         PATRON_OFENSIVO = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
     }
@@ -33,17 +34,10 @@ public class ModeradorService {
     }
 
     public boolean verificarLongitud(String contenido) {
-        int longitudMaxima = 200; // Longitud máxima permitida
-        return contenido.length() <= longitudMaxima;
+        return contenido != null && contenido.length() >= LONGITUD_MAXIMA;
     }
 
-    /**
-     * private static final int LONGITUD_MAXIMA = 500;
-     * 
-     * public boolean verificarLongitud(String contenido) {
-     * return contenido.length() <= LONGITUD_MAXIMA;
-     * }
-     * 
-     */
+
+
 
 }
