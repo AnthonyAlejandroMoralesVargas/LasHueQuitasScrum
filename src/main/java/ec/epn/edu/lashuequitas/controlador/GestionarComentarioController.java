@@ -125,7 +125,7 @@ public class GestionarComentarioController extends HttpServlet {
             return;
         }
 
-        if (!moderadorService.verificarLongitud(contenido)) {
+        if (moderadorService.verificarLongitud(contenido)) {
             request.setAttribute("messageLogin", "El contenido excede la longitud máxima permitida.");
             request.setAttribute("resena", resena);
             request.getRequestDispatcher("vista/VerComentarios.jsp").forward(request, response);
