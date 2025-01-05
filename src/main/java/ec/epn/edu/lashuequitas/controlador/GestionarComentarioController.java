@@ -119,14 +119,14 @@ public class GestionarComentarioController extends HttpServlet {
         ModeradorService moderadorService = new ModeradorService();
 
         if (moderadorService.verificarOfensivo(contenido)) {
-            request.setAttribute("messageLogin", "El comentario contiene contenido ofensivo.");
+            request.setAttribute("messageLogin", "El comentario contiene palabras ofensivas y no se ha publicado.");
             request.setAttribute("resena", resena);
             request.getRequestDispatcher("vista/VerComentarios.jsp").forward(request, response);
             return;
         }
 
         if (moderadorService.verificarLongitud(contenido)) {
-            request.setAttribute("messageLogin", "El contenido excede la longitud máxima permitida.");
+            request.setAttribute("messageLogin", "El comentario excede los 200 caracteres y no se ha publicado.");
             request.setAttribute("resena", resena);
             request.getRequestDispatcher("vista/VerComentarios.jsp").forward(request, response);
             return;
@@ -138,7 +138,7 @@ public class GestionarComentarioController extends HttpServlet {
 
         if (creado) {
             System.out.println("Comentario creado con éxito.");
-            request.setAttribute("message", "Comentario publicado con éxito.");
+            request.setAttribute("message", "Comentario publicado");
         } else {
             System.out.println("Error al crear el comentario.");
             request.setAttribute("message", "Error al publicar el comentario.");
