@@ -137,18 +137,12 @@ public class GestionarComentarioController extends HttpServlet {
         boolean creado = comentarioService.crear(comentario);
 
         if (creado) {
-            System.out.println("Comentario creado con éxito.");
-            request.setAttribute("message", "Comentario publicado");
+            request.setAttribute("messagePublicacion", "Comentario publicado");
+            request.getRequestDispatcher("/gestionarComentario?ruta=listar&idResena=" + resenaId).forward(request, response);
         } else {
-            System.out.println("Error al crear el comentario.");
-            request.setAttribute("message", "Error al publicar el comentario.");
+            request.setAttribute("messagePublicacion", "Error al publicar el comentario.");
+            request.getRequestDispatcher("vista/VerComentarios.jsp").forward(request, response);
         }
-
-        // Redirigir de vuelta a la reseña con los comentarios actualizados
-        request.setAttribute("resena", resena);
-
-        // Redirigir de vuelta a la página con los comentarios actualizados
-        response.sendRedirect(request.getContextPath() + "/gestionarComentario?ruta=listar&idResena=" + resenaId);
     }
 
 
