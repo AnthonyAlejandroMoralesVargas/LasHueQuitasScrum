@@ -119,6 +119,12 @@
             margin-bottom: 15px;
         }
 
+        .char-count {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
         .submit-button {
             width: 150px;
             align-self: flex-start;
@@ -211,7 +217,8 @@
                     ${messageLogin}
             </div>
         </c:if>
-        <textarea id="contenido" name="contenido" required></textarea>
+        <textarea id="contenido" name="contenido" required oninput="updateCharCount(this)"></textarea>
+        <div class="char-count" id="charCount">0 caracteres</div>
         <button type="submit" class="submit-button">Publicar Comentario</button>
     </form>
 </div>
@@ -235,6 +242,11 @@
             }, 5000);
         }
     };
+
+    function updateCharCount(textarea) {
+        const count = textarea.value.length;
+        document.getElementById('charCount').innerText = count + ' caracteres (200 caracteres maximo)';
+    }
 </script>
 </body>
 </html>

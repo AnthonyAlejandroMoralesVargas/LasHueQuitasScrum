@@ -1,15 +1,19 @@
-
 package ec.epn.edu.lashuequitas.modelo.jpa;
 
-import jakarta.persistence.*;
 import ec.epn.edu.lashuequitas.modelo.entidades.Resena;
 import ec.epn.edu.lashuequitas.modelo.entidades.Usuario;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.TypedQuery;
+
 import java.io.Serializable;
 import java.util.List;
 
 public class ResenaJPA implements Serializable {
 
-    private EntityManagerFactory emf = null;
+    private EntityManagerFactory emf;
 
     // Constructor con EntityManagerFactory
     public ResenaJPA(EntityManagerFactory emf) {
@@ -18,37 +22,37 @@ public class ResenaJPA implements Serializable {
 
     // Constructor por defecto que crea el EntityManagerFactory
     public ResenaJPA() {
-        emf = Persistence.createEntityManagerFactory("JavaWebLasHuequitas");
+        this.emf = Persistence.createEntityManagerFactory("JavaWebLasHuequitas");
     }
 
     // Obtener el EntityManager
-    public EntityManager getEntityManager() {
-
+    private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
-    // Método para crear una nueva reseña
+    // Crear una nueva reseña
     public boolean create(Resena resena) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
 
-            // Asociar la reseña con el usuario, si no está desvinculado
+            // Asociar usuario si existe
             Usuario usuario = resena.getUsuario();
             if (usuario != null) {
                 usuario = em.getReference(usuario.getClass(), usuario.getId());
                 resena.setUsuario(usuario);
             }
 
-            em.persist(resena); // Persistir la reseña
+            em.persist(resena);
             em.getTransaction().commit();
-            return true; // Operación exitosa
+            return true;
         } catch (Exception e) {
             if (em != null && em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Revertir en caso de error
+                em.getTransaction().rollback();
             }
-            return false; // Operación fallida
+            e.printStackTrace();
+            return false;
         } finally {
             if (em != null) {
                 em.close();
@@ -56,27 +60,34 @@ public class ResenaJPA implements Serializable {
         }
     }
 
+    public List<Resena> findAllResenasConImagenes() {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT r FROM Resena r LEFT JOIN FETCH r.imagenes", Resena.class)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Consultar todas las reseñas sin imágenes
     public List<Resena> findAllResenas() {
         EntityManager em = getEntityManager();
         try {
             return em.createQuery("SELECT r FROM Resena r", Resena.class)
                     .getResultList();
         } finally {
-            if (em != null) {
-                em.close();
-            }
+            em.close();
         }
     }
 
-    // Método para buscar una reseña por ID
+    // Consultar reseña por ID
     public Resena findById(Long id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Resena.class, id); // Busca y devuelve la reseña por ID
+            return em.find(Resena.class, id);
         } finally {
-            if (em != null) {
-                em.close(); // Asegura que el EntityManager se cierre
-            }
+            em.close();
         }
     }
 }

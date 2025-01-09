@@ -10,6 +10,7 @@
         <class>ec.epn.edu.lashuequitas.modelo.entidades.Usuario</class>
         <class>ec.epn.edu.lashuequitas.modelo.entidades.Resena</class>
         <class>ec.epn.edu.lashuequitas.modelo.entidades.Comentario</class>
+        <class>ec.epn.edu.lashuequitas.modelo.entidades.ImagenResena</class>
 
         <!-- Configuración de la base de datos -->
         <properties>

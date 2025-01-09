@@ -1,27 +1,36 @@
 package ec.epn.edu.lashuequitas.controlador;
 
-
+import ec.epn.edu.lashuequitas.modelo.entidades.ImagenResena;
 import ec.epn.edu.lashuequitas.modelo.entidades.Resena;
-import ec.epn.edu.lashuequitas.modelo.service.ModeradorService;
-import ec.epn.edu.lashuequitas.modelo.entidades.Usuario;
 import ec.epn.edu.lashuequitas.modelo.service.ResenaService;
+import ec.epn.edu.lashuequitas.modelo.entidades.Usuario;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
 import java.io.IOException;
-import java.util.Date;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/gestionarResena")
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 10,      // 10MB
+        maxRequestSize = 1024 * 1024 * 50    // 50MB
+)
 public class GestionarResenaController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public GestionarResenaController() {
+    private ResenaService resenaService;
 
+    public GestionarResenaController() {
+        this.resenaService = new ResenaService(); // Inicializa el servicio de reseñas
     }
 
     @Override
@@ -35,7 +44,6 @@ public class GestionarResenaController extends HttpServlet {
     }
 
     private void ruteador(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String ruta = (request.getParameter("ruta") == null) ? "accederForm" : request.getParameter("ruta");
         switch (ruta) {
             case "accederForm":
@@ -51,59 +59,60 @@ public class GestionarResenaController extends HttpServlet {
     }
 
     private void accederForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //1. Obtener parámetros
-        //2. Hablar con el modelo
-        //3. Redirigir a la vista
         response.sendRedirect("vista/FormularioResena.jsp");
     }
+
     private void publicar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //1. Obtener parámetros
         HttpSession session = request.getSession(false);
         Usuario usuario = (Usuario) session.getAttribute("user");
 
         String nombreRestaurante = request.getParameter("txtRestaurante");
         String tipoComida = request.getParameter("txtTipoComida");
         String descripcion = request.getParameter("txtDescripcion");
+        List<byte[]> imagenesBytes = new ArrayList<>();
 
-        // 2. Hablar con el modelo
-        ResenaService resenaService = new ResenaService();
-
-        String isOffensive = resenaService.validarContenidoResena(nombreRestaurante, descripcion);
-        String isTooLong = resenaService.validarLongitudResena(nombreRestaurante, descripcion);
-
-        if (isOffensive != null || isTooLong != null) {
-            request.setAttribute("messageLogin", isOffensive != null ? isOffensive : isTooLong);
-            request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);
-            return;
+        // Procesar las partes de la solicitud
+        for (Part part : request.getParts()) {
+            if (part.getName().equals("imagenes") && part.getSize() > 0) {
+                // Leer la imagen como byte[]
+                try (InputStream inputStream = part.getInputStream()) {
+                    imagenesBytes.add(inputStream.readAllBytes());
+                }
+            }
         }
 
+        // Crear la reseña
         Resena resena = new Resena(nombreRestaurante, tipoComida, descripcion, usuario);
 
+        // Agregar imágenes a la reseña
+        for (byte[] imagen : imagenesBytes) {
+            ImagenResena imagenResena = new ImagenResena();
+            imagenResena.setDatosImagen(imagen);
+            imagenResena.setResena(resena);
+            resena.getImagenes().add(imagenResena);
+        }
+
+        // Guardar la reseña
         boolean publicado = resenaService.crear(resena);
 
-        //3. Redirigir a la vista
         if (publicado) {
-            // Establecer el mensaje en el atributo de la solicitud
-            request.setAttribute("messagePublicacion", "Reseña publicada");
-            request.getRequestDispatcher("/gestionarResena?ruta=listar").forward(request, response);
-
+            response.sendRedirect(request.getContextPath() + "/gestionarResena?ruta=listar&messagePublicacion=Reseña publicada");
         } else {
-            // Mostrar error y redirigir al formulario
             request.setAttribute("messageLogin", "Error al publicar la reseña");
             request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);
         }
-
     }
 
     private void listar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Crear instancia del servicio
-        ResenaService resenaService = new ResenaService();
         String messagePublicacion = request.getParameter("messagePublicacion");
+        List<Resena> resenas = resenaService.listarResenasConImagenes();
 
-        // Obtener la lista de reseñas
-        List<Resena> resenas = resenaService.listarResenas();
+        for (Resena resena : resenas) {
+            if (resena.getImagenes() == null) {
+                resena.setImagenes(new ArrayList<>());
+            }
+        }
 
-        // Verificar si la lista de reseñas está vacía
         if (resenas.isEmpty()) {
             request.setAttribute("messageEmpty", "No hay reseñas disponibles en este momento");
         }
@@ -112,15 +121,7 @@ public class GestionarResenaController extends HttpServlet {
             request.setAttribute("messagePublicacion", messagePublicacion);
         }
 
-
-        // Pasar la lista como atributo al JSP
         request.setAttribute("resenas", resenas);
-
-
-        // Redirigir al JSP VerResenas.jsp
         request.getRequestDispatcher("vista/VerResenas.jsp").forward(request, response);
     }
-
-
-
 }

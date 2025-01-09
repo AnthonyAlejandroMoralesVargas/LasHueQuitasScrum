@@ -153,7 +153,10 @@
                 ${messageLogin}
         </div>
     </c:if>
-    <form action="${pageContext.request.contextPath}/gestionarResena?ruta=publicar" method="POST" autocomplete="off">
+    <form action="${pageContext.request.contextPath}/gestionarResena?ruta=publicar"
+          method="POST"
+          enctype="multipart/form-data"
+          autocomplete="off">
         <label for="restaurante">Nombre del restaurante:</label>
         <input type="text" id="restaurante" name="txtRestaurante" required>
 
@@ -167,6 +170,9 @@
 
         <label for="descripcion">Descripción:</label>
         <textarea id="descripcion" name="txtDescripcion" required></textarea>
+
+        <label for="imagen">Subir imágenes:</label>
+        <input type="file" id="imagen" name="imagenes" accept="image/*" multiple>
 
         <button type="submit" class="button">Publicar Reseña</button>
     </form>
@@ -193,6 +199,7 @@
             }, 5000);
         }
     };
+    
 </script>
 </body>
 </html>

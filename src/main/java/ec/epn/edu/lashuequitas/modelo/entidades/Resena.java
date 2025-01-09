@@ -2,6 +2,8 @@ package ec.epn.edu.lashuequitas.modelo.entidades;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "resenas")
@@ -28,6 +30,12 @@ public class Resena {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
+
+
+    @OneToMany(mappedBy = "resena", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ImagenResena> imagenes = new ArrayList<>();
+
+
     // Constructores
     public Resena() {
     }
@@ -38,6 +46,7 @@ public class Resena {
         this.descripcion = descripcion;
         this.fechaCreacion = new Date();
         this.usuario = usuario;
+        this.imagenes = new ArrayList<>();
     }
 
     // Getters y Setters
@@ -53,6 +62,13 @@ public class Resena {
         return restaurante;
     }
 
+    public List<ImagenResena> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(List<ImagenResena> imagenes) {
+        this.imagenes = imagenes;
+    }
     public void setRestaurante(String restaurante) {
         this.restaurante = restaurante;
     }
