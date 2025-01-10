@@ -245,7 +245,7 @@
 
     function updateCharCount(textarea) {
         const count = textarea.value.length;
-        document.getElementById('charCount').innerText = count + ' caracteres (200 caracteres maximo)';
+        document.getElementById('charCount').innerText = count + ' / 200 caracteres (máximo)';
     }
 </script>
 </body>

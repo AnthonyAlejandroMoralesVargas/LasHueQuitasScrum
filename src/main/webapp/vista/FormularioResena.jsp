@@ -142,6 +142,12 @@
             font-size: 1em;
             color: #333;
         }
+        /*Contador de caracteres*/
+        .char-count {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body> <!-- Cambiar el Controller -->
@@ -158,8 +164,8 @@
           enctype="multipart/form-data"
           autocomplete="off">
         <label for="restaurante">Nombre del restaurante:</label>
-        <input type="text" id="restaurante" name="txtRestaurante" required>
-
+        <input type="text" id="restaurante" name="txtRestaurante" required oninput="updateNombreCount(this)" >
+        <div class="char-count" id="nombreCount">0 caracteres</div>
         <label for="tipoComida">Tipo de comida:</label>
         <select id="tipoComida" name="txtTipoComida" required>
             <option value="Platos principales">Platos principales</option>
@@ -169,8 +175,8 @@
         </select>
 
         <label for="descripcion">Descripción:</label>
-        <textarea id="descripcion" name="txtDescripcion" required></textarea>
-
+        <textarea id="descripcion" name="txtDescripcion" required oninput="updateCharCount(this)"></textarea>
+        <div class="char-count" id="charCount">0 caracteres</div>
         <label for="imagen">Subir imágenes:</label>
         <input type="file" id="imagen" name="imagenes" accept="image/*" multiple>
 
@@ -187,19 +193,61 @@
     </div>
 </div>
 <script>
-    // Mostrar el modal si hay un mensaje
-    window.onload = function () {
-        const message = '${messageReg}';
-        if (message.trim()) {
-            const modal = document.getElementById('messageModal');
-            modal.style.display = 'flex';
-            // Ocultar el modal automáticamente después de 5 segundos
-            setTimeout(function () {
-                modal.style.display = 'none';
-            }, 5000);
+    function showMessageModal(mensaje) {
+        const modal = document.getElementById('messageModal');
+        const modalBody = modal.querySelector('.modal-body');
+
+        // Inyectar el mensaje en la parte del modal
+        modalBody.textContent = mensaje;
+
+        // Mostrar el modal
+        modal.style.display = 'flex';
+
+        // (Opcional) Cerrar el modal automáticamente después de 5 segundos:
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 5000);
+    }
+
+    window.onload = function() {
+        const serverMessage = '${messageReg}';
+        if (serverMessage.trim()) {
+            showMessageModal(serverMessage);
         }
     };
-    
+
+    (function() {
+        const MAX_FILE_SIZE_MB = 1;
+        const inputImagen = document.getElementById('imagen');
+
+        inputImagen.addEventListener('change', function() {
+            const maxSizeInBytes = MAX_FILE_SIZE_MB * 1024 * 1024;
+            const files = inputImagen.files;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (file.size > maxSizeInBytes) {
+                    // Observa cómo concatenamos:
+                    showMessageModal(
+                        "El archivo \"" + file.name + "\" supera el máximo de " + MAX_FILE_SIZE_MB + "MB."
+                    );
+
+                    // Limpiamos el input
+                    inputImagen.value = "";
+                    break;
+                }
+            }
+        });
+    })();
+
+    function updateCharCount(textarea) {
+        const count = textarea.value.length;
+        document.getElementById('charCount').innerText = count + ' / 200 caracteres (máximo)';
+    }
+    function updateNombreCount(input){
+        const count = input.value.length;
+        document.getElementById('nombreCount').innerText = count + ' / 200 caracteres (máximo)';
+    }
 </script>
 </body>
 </html>

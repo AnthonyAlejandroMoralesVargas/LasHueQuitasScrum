@@ -63,6 +63,7 @@ public class GestionarResenaController extends HttpServlet {
     }
 
     private void publicar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // 1. Obtener parametros de la solicitud
         HttpSession session = request.getSession(false);
         Usuario usuario = (Usuario) session.getAttribute("user");
 
@@ -80,6 +81,17 @@ public class GestionarResenaController extends HttpServlet {
                 }
             }
         }
+        // 2. Hablar con el modelo
+        ResenaService resenaService = new ResenaService();
+
+        String isOffensive = resenaService.validarContenidoResena(nombreRestaurante, descripcion);
+        String isTooLong = resenaService.validarLongitudResena(nombreRestaurante, descripcion);
+
+        if (isOffensive != null || isTooLong != null) {
+            request.setAttribute("messageLogin", isOffensive != null ? isOffensive : isTooLong);
+            request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);
+            return;
+        }
 
         // Crear la reseña
         Resena resena = new Resena(nombreRestaurante, tipoComida, descripcion, usuario);
@@ -96,7 +108,8 @@ public class GestionarResenaController extends HttpServlet {
         boolean publicado = resenaService.crear(resena);
 
         if (publicado) {
-            response.sendRedirect(request.getContextPath() + "/gestionarResena?ruta=listar&messagePublicacion=Reseña publicada");
+            request.setAttribute("messagePublicacion", "Reseña publicada");
+            request.getRequestDispatcher("/gestionarResena?ruta=listar").forward(request, response);
         } else {
             request.setAttribute("messageLogin", "Error al publicar la reseña");
             request.getRequestDispatcher("vista/FormularioResena.jsp").forward(request, response);

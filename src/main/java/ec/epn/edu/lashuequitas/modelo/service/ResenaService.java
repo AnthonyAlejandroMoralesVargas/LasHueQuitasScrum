@@ -35,6 +35,7 @@ public class ResenaService {
 
     // Listar todas las reseñas con imágenes cargadas (usando JOIN FETCH)
     public List<Resena> listarResenasConImagenes() {
+
         return resenaJPA.findAllResenasConImagenes();
     }
 
@@ -60,6 +61,7 @@ public class ResenaService {
     }
 
     // Agregar una imagen a una reseña
+    /*
     public void agregarImagenAResena(Resena resena, InputStream imagenStream) throws IOException {
         byte[] datosImagen = imagenStream.readAllBytes();
         ImagenResena imagenResena = new ImagenResena();
@@ -67,4 +69,6 @@ public class ResenaService {
         imagenResena.setResena(resena);
         resena.getImagenes().add(imagenResena);
     }
+
+     */
 }
